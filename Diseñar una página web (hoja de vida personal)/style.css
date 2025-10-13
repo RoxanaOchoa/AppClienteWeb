@@ -1,0 +1,71 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Estilo general */
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  background: #f4f4f9;
+  color: #363535;
+  padding: 20px;
+}
+
+/* Encabezado */
+header {
+  background: #71b8fe;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+}
+header .foto {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+/* Secciones */
+.seccion {
+  background: white;
+  margin: 20px 0;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.47);
+}
+.seccion h2 {
+  color: #71b8ff;
+  margin-bottom: 10px;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+table, th, td {
+  border: 1px solid #ddd;
+}
+th, td {
+  padding: 10px;
+  text-align: center;
+}
+th {
+  background: #71b1f1;
+  color: white;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  margin-top: 20px;
+  padding: 10px;
+  background: #79b3ed;
+  color: white;
+  border-radius: 10px;
+}
