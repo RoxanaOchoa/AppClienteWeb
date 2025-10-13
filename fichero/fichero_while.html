@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EjercicioPropuesto-2.3 While</title>
+</head>
+<body>
+  <h1>Ejercicio con Bucle While</h1>
+
+  <script type="text/javascript">
+    var countdown = prompt("Introduce un número para iniciar la cuenta atrás:");
+
+    // Convertir el valor ingresado en número
+    countdown = Number(countdown);
+
+    // Bucle while que se ejecuta mientras countdown sea mayor que 0
+    while (countdown > 0) {
+      alert(countdown + "...");
+      countdown--; // resta 1 en cada iteración
+    }
+
+    alert("¡Cuenta terminada!");
+  </script>
+</body>
+</html>

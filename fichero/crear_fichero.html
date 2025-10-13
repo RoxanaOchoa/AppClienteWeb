@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EjercicioPropuesto-2.1-Numeros con Condicionales</title>
+</head>
+<body>
+  <h1>Ejercicio con Condicionales en JavaScript</h1>
+
+  <script type="text/javascript">
+    // Declaramos los valores
+    var maxValue = Number.MAX_VALUE;
+    var minValue = Number.MIN_VALUE;
+    var especial = maxValue * 2; // Esto dará Infinity
+
+    // Mostramos los valores
+    alert("Máximo valor representable: " + maxValue);
+    alert("Mínimo valor positivo: " + minValue);
+    alert("Valor especial: " + especial);
+
+    // 🔹 Ahora usamos sentencias condicionales
+    if (especial === Infinity) {
+      alert("El valor especial es infinito (Infinity).");
+    } else {
+      alert("El valor especial no es infinito.");
+    }
+
+    // Otro ejemplo condicional:
+    if (maxValue > minValue) {
+      alert("El número máximo es mayor que el mínimo, como era de esperarse.");
+    } else {
+      alert("Algo está mal, el mínimo es mayor que el máximo.");
+    }
+
+    // También podemos verificar si el mínimo es cercano a cero
+    if (minValue > 0 && minValue < 0.0000001) {
+      alert("El número mínimo es muy pequeño y cercano a cero.");
+    }
+  </script>
+</body>
+</html>
