@@ -1,0 +1,39 @@
+/* Texto principal */
+body {
+    color: #00F; /* Azul */
+    background-color: #CFC; /* Verde claro */
+    font-family: Georgia, Cambria, serif;
+    font-size: 16px;
+}
+
+/* Encabezado nivel 1 */
+h1 {
+    color: #F00; /* Rojo claro */
+    font-family: Verdana, Calibri, sans-serif;
+    font-size: 32px;
+}
+
+/* Encabezado nivel 2 */
+h2 {
+    color: #A00; /* Rojo oscuro */
+    font-family: Verdana, Calibri, sans-serif;
+    font-size: 24px;
+}
+
+/* Campos de datos del libro */
+h2 + ul li {
+    color: #060; /* Verde oscuro */
+}
+
+/* Palabras Internet y Web cuando son sustantivos */
+.internet, .web {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Términos técnicos */
+.tecnico {
+    color: #FFF; /* Blanco */
+    background-color: #000; /* Negro */
+    font-style: italic;
+}
