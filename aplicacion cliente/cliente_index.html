@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ingreso de datos de clientes</title>
+  <link rel="stylesheet" href="estilos.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>Ingreso de datos de clientes</h1>
+
+    <form id="clienteForm" novalidate>
+      <div class="grid">
+        <label>
+          Nombre completo
+          <input type="text" id="nombre" name="nombre" required minlength="3" />
+        </label>
+
+        <label>
+          Correo electrónico
+          <input type="email" id="email" name="email" required />
+        </label>
+
+        <label>
+          Teléfono
+          <input type="tel" id="telefono" name="telefono" pattern="[0-9+\- ()]{7,20}" placeholder="0981234567" />
+        </label>
+
+        <label>
+          Fecha de nacimiento
+          <input type="date" id="fechaNacimiento" name="fechaNacimiento" />
+        </label>
+
+        <label>
+          Género
+          <select id="genero" name="genero">
+            <option value="">-- Seleccione --</option>
+            <option>Femenino</option>
+            <option>Masculino</option>
+            <option>Otro</option>
+            <option>Prefiero no decir</option>
+          </select>
+        </label>
+
+        <label class="full">
+          Dirección
+          <textarea id="direccion" name="direccion" rows="3"></textarea>
+        </label>
+
+        <label>
+          ¿Cliente activo?
+          <input type="checkbox" id="activo" name="activo" checked /> Activo
+        </label>
+
+        <label>
+          Tipo de cliente
+          <div class="radios">
+            <label><input type="radio" name="tipo" value="regular" checked /> Regular</label>
+            <label><input type="radio" name="tipo" value="premium" /> Premium</label>
+            <label><input type="radio" name="tipo" value="empresa" /> Empresa</label>
+          </div>
+        </label>
+      </div>
+
+      <div class="actions">
+        <button type="submit" id="guardar">Guardar</button>
+        <button type="button" id="limpiar">Limpiar</button>
+      </div>
+    </form>
+
+    <section id="resultSection" aria-live="polite">
+      <h2>Clientes guardados</h2>
+      <table id="clientesTable">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Activo</th>
+            <th>Tipo</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
