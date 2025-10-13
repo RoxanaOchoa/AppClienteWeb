@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Operaciones con Bucle</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #333;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #1a73e8;
+    }
+
+    input {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 120px;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0b5ed7;
+    }
+
+    #resultado {
+      margin-top: 20px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: inline-block;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Aplicación Web con Bucle y Operaciones</h1>
+
+  <div>
+    <input type="number" id="num1" placeholder="Ingrese primer número">
+    <input type="number" id="num2" placeholder="Ingrese segundo número">
+    <br>
+    <button onclick="realizarOperaciones()">Calcular</button>
+  </div>
+
+  <div id="resultado"></div>
+
+  <script>
+    // Función principal
+    function realizarOperaciones() {
+      const n1 = parseFloat(document.getElementById("num1").value);
+      const n2 = parseFloat(document.getElementById("num2").value);
+      const resultadoDiv = document.getElementById("resultado");
+      resultadoDiv.innerHTML = ""; // Limpiar resultados previos
+
+      // Validaciones
+      if (isNaN(n1) || isNaN(n2)) {
+        alert("Por favor, ingrese ambos números correctamente.");
+        return;
+      }
+
+      // Objeto con las operaciones definidas por el usuario
+      const operaciones = {
+        suma: (a, b) => a + b,
+        resta: (a, b) => a - b,
+        multiplicacion: (a, b) => a * b,
+        division: (a, b) => b !== 0 ? a / b : "No se puede dividir por 0",
+        potencia: (a, b) => a ** b // operación extra para la 5ta iteración
+      };
+
+      // Bucle de 5 iteraciones
+      for (let i = 1; i <= 5; i++) {
+        let resultado;
+
+        switch (i) {
+          case 1:
+            resultado = operaciones.suma(n1, n2);
+            resultadoDiv.innerHTML += `<p><b>Iteración ${i}:</b> Suma = ${resultado}</p>`;
+            break;
+          case 2:
+            resultado = operaciones.resta(n1, n2);
+            resultadoDiv.innerHTML += `<p><b>Iteración ${i}:</b> Resta = ${resultado}</p>`;
+            break;
+          case 3:
+            resultado = operaciones.multiplicacion(n1, n2);
+            resultadoDiv.innerHTML += `<p><b>Iteración ${i}:</b> Multiplicación = ${resultado}</p>`;
+            break;
+          case 4:
+            resultado = operaciones.division(n1, n2);
+            resultadoDiv.innerHTML += `<p><b>Iteración ${i}:</b> División = ${resultado}</p>`;
+            break;
+          case 5:
+            resultado = operaciones.potencia(n1, n2);
+            resultadoDiv.innerHTML += `<p><b>Iteración ${i}:</b> Potencia = ${resultado}</p>`;
+            break;
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>
