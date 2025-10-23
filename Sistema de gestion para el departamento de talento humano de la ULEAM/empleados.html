@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Empleados | ULEAM</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        // Verifica si hay usuario activo
+        if (!localStorage.getItem("usuarioActivo")) {
+            alert("Debes iniciar sesión primero.");
+            globalThis.location.href = "index.html";
+        }
+    </script>
+</head>
+<body>
+    <header class="topbar">
+        <h1>ULEAM - Talento Humano</h1>
+        <button onclick="cerrarSesion()" class="btn btn-verde">Cerrar Sesión</button>
+    </header>
+
+    <main class="container">
+        <h2>Registro de Empleados</h2>
+
+        <form id="formEmpleado" onsubmit="return agregarEmpleado(event)">
+            <input type="text" id="nombre" placeholder="Nombre completo" required>
+            <input type="email" id="correo" placeholder="Correo institucional" required>
+            <input type="text" id="facultad" placeholder="Facultad" required>
+            <label for="cv">Subir Currículum (PDF):</label>
+            <input type="file" id="cv" accept="application/pdf" required>
+            <button type="submit" class="btn btn-rojo">Registrar</button>
+        </form>
+
+        <h3>Listado de Candidatos</h3>
+        <table id="tablaEmpleados">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Facultad</th>
+                    <th>Currículum</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </main>
+
+    <script>
+        // Cargar empleados desde localStorage al iniciar
+        let empleados = JSON.parse(localStorage.getItem('empleados')) || [];
+
+        // Renderizar la tabla al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTabla();
+        });
+
+        function agregarEmpleado(event) {
+            event.preventDefault();
+
+            const nombre = document.getElementById("nombre").value;
+            const correo = document.getElementById("correo").value;
+            const facultad = document.getElementById("facultad").value;
+            const cv = document.getElementById("cv").files[0];
+
+            if (!cv) {
+                alert("Debe subir el currículum en PDF.");
+                return false;
+            }
+
+            if (!correo.endsWith('@uleam.edu.ec')) {
+                alert("Debe usar un correo institucional (@uleam.edu.ec)");
+                return false;
+            }
+
+            // Convertir el archivo a Base64 para guardarlo en localStorage
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const empleado = { 
+                    nombre, 
+                    correo, 
+                    facultad, 
+                    cv: e.target.result, // Guardar como Base64
+                    cvNombre: cv.name,   // Guardar el nombre original
+                    estado: "En espera",
+                    fecha: new Date().toISOString()
+                };
+                
+                empleados.push(empleado);
+                guardarEnLocalStorage();
+                renderTabla();
+                document.getElementById("formEmpleado").reset();
+            };
+            reader.readAsDataURL(cv);
+            
+            return true;
+        }
+
+        function guardarEnLocalStorage() {
+            localStorage.setItem('empleados', JSON.stringify(empleados));
+        }
+
+        function renderTabla() {
+            const tbody = document.querySelector("#tablaEmpleados tbody");
+            tbody.innerHTML = "";
+            
+            let index = 0;
+            for (const emp of empleados) {
+                const fila = document.createElement("tr");
+                fila.innerHTML = `
+                    <td>${emp.nombre}</td>
+                    <td>${emp.correo}</td>
+                    <td>${emp.facultad}</td>
+                    <td><button class="btn btn-verde" onclick="verCV(${index})">Ver PDF</button></td>
+                    <td><span class="estado ${emp.estado.toLowerCase()}">${emp.estado}</span></td>
+                    <td>
+                        <button class="btn btn-verde" onclick="cambiarEstado(${index}, 'Contratado')">Aceptar</button>
+                        <button class="btn btn-rojo" onclick="cambiarEstado(${index}, 'Rechazado')">Rechazar</button>
+                        <button class="btn btn-eliminar" onclick="eliminarEmpleado(${index})">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(fila);
+                index++;
+            }
+        }
+
+        function verCV(index) {
+            const empleado = empleados[index];
+            // Crear un enlace temporal para descargar/ver el PDF
+            const link = document.createElement('a');
+            link.href = empleado.cv;
+            link.download = empleado.cvNombre || 'curriculum.pdf';
+            link.target = '_blank';
+            link.click();
+        }
+
+        function cambiarEstado(index, estado) {
+            empleados[index].estado = estado;
+            guardarEnLocalStorage();
+            renderTabla();
+        }
+
+        function eliminarEmpleado(index) {
+            if (confirm('¿Estás seguro de que quieres eliminar este empleado?')) {
+                empleados.splice(index, 1);
+                guardarEnLocalStorage();
+                renderTabla();
+            }
+        }
+
+        function cerrarSesion() {
+            localStorage.removeItem('usuarioActivo');
+            globalThis.location.href = "index.html";
+        }
+
+        // Función adicional para limpiar todos los datos (útil para testing)
+        function limpiarDatos() {
+            if (confirm('¿Estás seguro de que quieres eliminar todos los datos?')) {
+                localStorage.removeItem('empleados');
+                empleados = [];
+                renderTabla();
+            }
+        }
+    </script>
+</body>
+</html>

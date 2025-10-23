@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reportes | Talento Humano ULEAM</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    // Verificar si hay usuario activo
+    if (!localStorage.getItem("usuarioActivo")) {
+      alert("Debes iniciar sesión primero.");
+      globalThis.location.href = "index.html";
+    }
+  </script>
+</head>
+<body>
+  <header class="header">
+    <h1>Reportes del Personal - ULEAM</h1>
+    <nav>
+      <a href="empleados.html">Empleados</a>
+      <a href="departamentos.html">Departamentos</a>
+      <a href="reportes.html" class="active">Reportes</a>
+      <a href="index.html" onclick="cerrarSesion()">Cerrar sesión</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h2>Generar Reporte Mensual</h2>
+    <p>Seleccione el tipo de reporte que desea generar:</p>
+
+    <select id="tipoReporte">
+      <option value="general">General de Empleados</option>
+      <option value="contratados">Empleados Contratados</option>
+      <option value="rechazados">Empleados Rechazados</option>
+      <option value="espera">Empleados en Espera</option>
+    </select>
+
+    <button class="btn btn-rojo" onclick="generarReporte()">Generar Reporte</button>
+    <button class="btn btn-verde" onclick="generarPDF()">Exportar a PDF</button>
+
+    <div id="vistaPrevia" class="vista-previa">
+      <h3>Vista Previa del Reporte</h3>
+      <div id="resultado"></div>
+    </div>
+
+    <div class="estadisticas">
+      <h3>Estadísticas Generales</h3>
+      <div id="estadisticas"></div>
+    </div>
+  </main>
+
+  <script>
+    // Cargar empleados desde localStorage
+    let empleados = JSON.parse(localStorage.getItem('empleados')) || [];
+
+    function generarReporte() {
+      const tipoReporte = document.getElementById("tipoReporte").value;
+      const resultado = document.getElementById("resultado");
+      const estadisticas = document.getElementById("estadisticas");
+      
+      let empleadosFiltrados = [];
+
+      // Filtrar empleados según el tipo de reporte
+      switch(tipoReporte) {
+        case 'contratados':
+          empleadosFiltrados = empleados.filter(emp => emp.estado === 'Contratado');
+          break;
+        case 'rechazados':
+          empleadosFiltrados = empleados.filter(emp => emp.estado === 'Rechazado');
+          break;
+        case 'espera':
+          empleadosFiltrados = empleados.filter(emp => emp.estado === 'En espera');
+          break;
+        default:
+          empleadosFiltrados = empleados;
+      }
+
+      // Generar vista previa del reporte
+      resultado.innerHTML = `
+        <div class="reporte-header">
+          <h4>Reporte: ${getNombreReporte(tipoReporte)}</h4>
+          <p>Fecha de generación: ${new Date().toLocaleDateString()}</p>
+          <p>Total de registros: ${empleadosFiltrados.length}</p>
+        </div>
+        <table class="tabla-reporte">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Facultad</th>
+              <th>Estado</th>
+              <th>Fecha Registro</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${empleadosFiltrados.map(emp => `
+              <tr>
+                <td>${emp.nombre}</td>
+                <td>${emp.correo}</td>
+                <td>${emp.facultad}</td>
+                <td><span class="estado ${emp.estado.toLowerCase()}">${emp.estado}</span></td>
+                <td>${new Date(emp.fecha).toLocaleDateString()}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+
+      // Generar estadísticas
+      generarEstadisticas(estadisticas);
+    }
+
+    function getNombreReporte(tipo) {
+      const nombres = {
+        'general': 'General de Empleados',
+        'contratados': 'Empleados Contratados',
+        'rechazados': 'Empleados Rechazados',
+        'espera': 'Empleados en Espera'
+      };
+      return nombres[tipo] || 'Reporte General';
+    }
+
+    function generarEstadisticas(container) {
+      const total = empleados.length;
+      const contratados = empleados.filter(emp => emp.estado === 'Contratado').length;
+      const rechazados = empleados.filter(emp => emp.estado === 'Rechazado').length;
+      const espera = empleados.filter(emp => emp.estado === 'En espera').length;
+
+      container.innerHTML = `
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h4>Total Empleados</h4>
+            <span class="stat-number">${total}</span>
+          </div>
+          <div class="stat-card">
+            <h4>Contratados</h4>
+            <span class="stat-number" style="color: green;">${contratados}</span>
+          </div>
+          <div class="stat-card">
+            <h4>Rechazados</h4>
+            <span class="stat-number" style="color: red;">${rechazados}</span>
+          </div>
+          <div class="stat-card">
+            <h4>En Espera</h4>
+            <span class="stat-number" style="color: orange;">${espera}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function generarPDF() {
+      const { jsPDF } = globalThis.jspdf;
+      const doc = new jsPDF();
+      
+      const tipoReporte = document.getElementById("tipoReporte").value;
+      let empleadosFiltrados = [];
+
+      // Filtrar empleados
+      switch(tipoReporte) {
+        case 'contratados':
+          empleadosFiltrados = empleados.filter(emp => emp.estado === 'Contratado');
+          break;
+        case 'rechazados':
+          empleadosFiltrados = empleados.filter(emp => emp.estado === 'Rechazado');
+          break;
+        case 'espera':
+          empleadosFiltrados = empleados.filter(emp => emp.estado === 'En espera');
+          break;
+        default:
+          empleadosFiltrados = empleados;
+      }
+
+      // Título del reporte
+      doc.setFontSize(16);
+      doc.text(`Reporte: ${getNombreReporte(tipoReporte)}`, 20, 20);
+      doc.setFontSize(10);
+      doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 30);
+      doc.text(`Total registros: ${empleadosFiltrados.length}`, 20, 40);
+
+      // Cabecera de la tabla
+      let y = 60;
+      doc.setFontSize(8);
+      doc.text("Nombre", 20, y);
+      doc.text("Correo", 60, y);
+      doc.text("Facultad", 100, y);
+      doc.text("Estado", 140, y);
+      doc.text("Fecha", 170, y);
+      
+      y += 10;
+
+      // Datos de la tabla
+      for (const emp of empleadosFiltrados) {
+        if (y > 270) { // Nueva página si se llena
+          doc.addPage();
+          y = 20;
+        }
+        
+        doc.text(emp.nombre.substring(0, 20), 20, y);
+        doc.text(emp.correo.substring(0, 25), 60, y);
+        doc.text(emp.facultad.substring(0, 20), 100, y);
+        doc.text(emp.estado, 140, y);
+        doc.text(new Date(emp.fecha).toLocaleDateString(), 170, y);
+        
+        y += 10;
+      }
+
+      // Guardar PDF
+      doc.save(`reporte_${tipoReporte}_${new Date().toISOString().split('T')[0]}.pdf`);
+    }
+
+    function cerrarSesion() {
+      localStorage.removeItem('usuarioActivo');
+      globalThis.location.href = "index.html";
+    }
+
+    // Generar estadísticas al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+      generarEstadisticas(document.getElementById("estadisticas"));
+    });
+  </script>
+
+  <!-- Incluir la librería jsPDF para generar PDFs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</body>
+</html>
